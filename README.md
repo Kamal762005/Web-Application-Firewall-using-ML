@@ -77,14 +77,12 @@ pip install -r requirements.txt
 
 ### Train Model
 
-```bash
-python train_model.py
-```
+- jupyter notebook : run the file "Web Application Firewall .ipynb"
 
 ### Run Application
 
 ```bash
-python app.py
+python Proxy_server.py
 ```
 
 ---
@@ -108,26 +106,3 @@ python app.py
 
 ---
 
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to fork the repository and submit a pull request.
-
----
-
-## 📜 License
-
-This project is licensed under the MIT License.
-
----
-
-## 👨‍💻 Author
-
-Kamal
-
----
-
-## ⭐ Support
-
-If you like this project, give it a ⭐ on GitHub!
-
----
