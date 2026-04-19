@@ -84,8 +84,18 @@ pip install -r requirements.txt
 ```bash
 python Proxy_server.py
 ```
+### Setup Proxy 
 
----
+add the extension foxy proxy to the firefox and add the proxy as shown below
+
+<img width="1454" height="477" alt="image" src="https://github.com/user-attachments/assets/ff7a0a66-3562-4da3-a3f0-34932f7d5803" />
+
+after that navigate to any http based site and test it.
+
+#### For Example
+
+- demo.testfire.net
+- testphp.vulnweb.com
 
 ## 📊 Model Details
 
