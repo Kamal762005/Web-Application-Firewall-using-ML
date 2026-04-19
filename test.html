@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CyberCommand Ultimate | AI-Driven SOC & Training Platform 2026</title>
+
+<!-- External Libraries -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+/* ================= THEME VARIABLES ================= */
+:root {
+    --bg-dark: #020617;
+    --bg-panel: #0f172a;
+    --bg-card: #1e293b;
+    --primary: #00eaff; /* Cyan */
+    --secondary: #00a651; /* Splunk Green */
+    --accent: #0062ff; /* QRadar Blue */
+    --elastic: #00bfb3; /* Elastic Teal */
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --success: #10b981;
+    --text-main: #f1f5f9;
+    --text-muted: #94a3b8;
+    --border: #334155;
+    --glow: 0 0 15px rgba(0, 234, 255, 0.3);
+}
+
+/* ================= GLOBAL STYLES ================= */
+* { box-sizing: border-box; margin: 0; padding: 0; scrollbar-width: thin; scrollbar-color: var(--primary) var(--bg-dark); }
+body { font-family: 'Segoe UI', 'Roboto', sans-serif; background: var(--bg-dark); color: var(--text-main); height: 100vh; overflow: hidden; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-dark); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+/* ================= LAYOUT ================= */
+.app-container { display: grid; grid-template-columns: 260px 1fr; height: 100vh; }
+
+/* ================= SIDEBAR ================= */
+.sidebar {
+    background: var(--bg-panel);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    z-index: 10;
+}
+.brand {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--primary);
+    text-align: center;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: var(--glow);
+}
+.brand i { margin-right: 10px; }
+
+.nav-item {
+    padding: 14px 18px;
+    margin: 6px 0;
+    border-radius: 12px;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 500;
+}
+.nav-item:hover, .nav-item.active {
+    background: rgba(0, 234, 255, 0.1);
+    color: var(--primary);
+    border-left: 3px solid var(--primary);
+}
+.nav-item i { width: 20px; text-align: center; }
+
+.user-profile {
+    margin-top: auto;
+    padding: 15px;
+    background: var(--bg-card);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid var(--border);
+}
+.user-avatar {
+    width: 35px; height: 35px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: bold; color: #000;
+}
+
+/* ================= MAIN CONTENT ================= */
+.main-content {
+    padding: 25px;
+    overflow-y: auto;
+    position: relative;
+    background: radial-gradient(circle at top right, #1e293b 0%, #020617 40%);
+}
+
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+.page-title { font-size: 24px; font-weight: 700; }
+.status-badge {
+    background: rgba(16, 185, 129, 0.2);
+    color: var(--success);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    border: 1px solid var(--success);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse { 0% {box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);} 70% {box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);} 100% {box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);} }
+
+/* ================= SECTIONS (TABS) ================= */
+.section-view { display: none; animation: fadeIn 0.4s ease; }
+.section-view.active { display: block; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Grid Layouts */
+.dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+.full-width { grid-column: 1 / -1; }
+
+/* Cards */
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    position: relative;
+    overflow: hidden;
+}
+.card h3 { color: var(--primary); margin-bottom: 15px; font-size: 16px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+
+/* Alerts Style */
+.alert-item {
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.05);
+    border-left: 4px solid var(--text-muted);
+    font-size: 14px;
+    display: flex; justify-content: space-between;
+}
+.alert-item.critical { border-color: var(--danger); background: rgba(239, 68, 68, 0.1); }
+.alert-item.warning { border-color: var(--warning); background: rgba(245, 158, 11, 0.1); }
+
+/* Terminal Style */
+.terminal-window {
+    background: #000;
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 15px;
+    font-family: 'Courier New', monospace;
+    height: 350px;
+    overflow-y: auto;
+    color: #0f0;
+    position: relative;
+}
+.log-line { margin: 4px 0; opacity: 0; animation: typeLine 0.1s forwards; border-bottom: 1px solid #111; }
+@keyframes typeLine { to { opacity: 1; } }
+
+/* Training/THB Styles */
+.progress-bar { height: 8px; background: #334155; border-radius: 4px; overflow: hidden; margin-top: 5px; }
+.progress-fill { height: 100%; background: var(--success); width: 0%; transition: width 0.5s ease; }
+
+.challenge-box {
+    background: rgba(0,0,0,0.2);
+    padding: 15px;
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    margin-top: 10px;
+}
+.challenge-box input {
+    background: var(--bg-dark);
+    border: 1px solid var(--border);
+    color: #fff;
+    padding: 8px;
+    width: 100%;
+    margin: 10px 0;
+    border-radius: 6px;
+}
+.btn {
+    background: var(--primary);
+    color: #000;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+.btn-red { background: var(--danger); color: white; }
+
+/* Table Styles */
+table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 14px; }
+th { background: rgba(255,255,255,0.05); color: var(--primary); }
+
+/* AI Copilot Floating Window */
+.copilot-btn {
+    position: fixed; bottom: 20px; right: 20px;
+    width: 60px; height: 60px;
+    background: linear-gradient(135deg, var(--primary), #0099ff);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #000; font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(0, 234, 255, 0.4);
+    transition: transform 0.3s;
+    z-index: 100;
+}
+.copilot-btn:hover { transform: scale(1.1) rotate(10deg); }
+
+.copilot-window {
+    position: fixed; bottom: 90px; right: 20px;
+    width: 350px; height: 500px;
+    background: var(--bg-card);
+    border: 1px solid var(--primary);
+    border-radius: 16px;
+    display: none;
+    flex-direction: column;
+    box-shadow: 0 10px 50px rgba(0,0,0,0.7);
+    z-index: 100;
+    overflow: hidden;
+    animation: slideUp 0.3s ease;
+}
+@keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.copilot-header {
+    background: linear-gradient(90deg, var(--bg-panel), var(--bg-card));
+    padding: 15px;
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    font-weight: bold; color: var(--primary);
+}
+.chat-area { flex: 1; padding: 15px; overflow-y: auto; font-size: 13px; }
+.msg { padding: 8px 12px; border-radius: 12px; margin-bottom: 8px; max-width: 85%; }
+.msg.bot { background: rgba(255,255,255,0.1); border-top-left-radius: 2px; }
+.msg.user { background: rgba(0, 234, 255, 0.2); border-top-right-radius: 2px; margin-left: auto; color: var(--primary); }
+.chat-input { display: flex; padding: 10px; border-top: 1px solid var(--border); background: var(--bg-panel); }
+.chat-input input {
+    flex: 1; background: #000; border: 1px solid var(--border);
+    color: white; padding: 8px; border-radius: 20px; outline: none;
+}
+
+</style>
+</head>
+<body>
+
+<div class="app-container">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="brand"><i class="fa-solid fa-shield-cat"></i> CyberCmd</div>
+        
+        <div class="nav-item active" onclick="switchTab('dashboard', this)">
+            <i class="fa fa-chart-line"></i> SOC Dashboard
+        </div>
+        <div class="nav-item" onclick="switchTab('academy', this)">
+            <i class="fa fa-graduation-cap"></i> Academy (THB)
+        </div>
+        <div class="nav-item" onclick="switchTab('simulation', this)">
+            <i class="fa fa-virus"></i> Attack Sim
+        </div>
+        <div class="nav-item" onclick="switchTab('intel', this)">
+            <i class="fa fa-database"></i> Threat Intel
+        </div>
+        <div class="nav-item" onclick="switchTab('tools', this)">
+            <i class="fa fa-toolbox"></i> AI Tools 2026
+        </div>
+
+        <div class="user-profile">
+            <div class="user-avatar">V</div>
+            <div>
+                <div style="font-size:14px; font-weight:bold;">Vignesh</div>
+                <div style="font-size:11px; color:var(--success);">Online - Ahmedabad</div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        
+        <div class="top-bar">
+            <div class="page-title" id="pageTitle">Security Operations Center</div>
+            <div class="status-badge"><i class="fa fa-check-circle"></i> SYSTEM SECURE</div>
+        </div>
+
+        <!-- === VIEW: DASHBOARD === -->
+        <div id="dashboard" class="section-view active">
+            <div class="dashboard-grid">
+                <!-- Stats -->
+                <div class="card">
+                    <h3>Current Threat Level</h3>
+                    <canvas id="threatDoughnut"></canvas>
+                </div>
+                <div class="card">
+                    <h3>Network Traffic Anomaly</h3>
+                    <canvas id="trafficLine"></canvas>
+                </div>
+                <div class="card">
+                    <h3>Active Alerts</h3>
+                    <div class="alert-item critical">
+                        <span><i class="fa fa-bug"></i> SQL Injection Detected</span>
+                        <span style="font-size:11px">10.45.22.1</span>
+                    </div>
+                    <div class="alert-item warning">
+                        <span><i class="fa fa-user-lock"></i> Failed Login (Root)</span>
+                        <span style="font-size:11px">SSH</span>
+                    </div>
+                    <div class="alert-item">
+                        <span><i class="fa fa-search"></i> Nmap Scan Blocked</span>
+                        <span style="font-size:11px">Firewall</span>
+                    </div>
+                </div>
+                <!-- Live Logs -->
+                <div class="card full-width">
+                    <h3><i class="fa fa-terminal"></i> Live Security Telemetry</h3>
+                    <div id="live-logs" style="height:150px; overflow:hidden; font-family:monospace; font-size:12px; opacity:0.8;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- === VIEW: ACADEMY (THB CLONE) === -->
+        <div id="academy" class="section-view">
+            <div class="dashboard-grid">
+                <div class="card full-width" id="login-panel">
+                    <h3>Cadet Login</h3>
+                    <p style="margin-bottom:15px; color:#aaa;">Login to access labs. (Demo: Use any username)</p>
+                    <input type="text" id="thb-user" placeholder="Username" style="padding:10px; width:200px; background:#000; border:1px solid #333; color:white; border-radius:5px;">
+                    <button class="btn" onclick="thbLogin()">Access Platform</button>
+                </div>
+
+                <div id="learning-panel" class="full-width" style="display:none;">
+                    <div class="card full-width">
+                        <h3>Your Progress</h3>
+                        <div style="display:flex; justify-content:space-between;">
+                            <span>Rank: <b style="color:var(--primary)">Script Kiddie</b></span>
+                            <span>Points: <b id="user-points">0</b></span>
+                        </div>
+                        <div class="progress-bar"><div class="progress-fill" id="xp-bar"></div></div>
+                    </div>
+
+                    <div class="dashboard-grid" style="margin-top:20px;">
+                        <!-- SQLi Lab -->
+                        <div class="card">
+                            <h3><i class="fa fa-database"></i> Lab 1: SQL Injection</h3>
+                            <p style="font-size:13px; color:#aaa;">Bypass the login using a standard payload.</p>
+                            <div class="challenge-box">
+                                <label>Target: Login Portal</label>
+                                <input id="sqli-in" placeholder="Username">
+                                <button class="btn" onclick="checkSQLi()">Inject</button>
+                                <div id="sqli-res" style="margin-top:5px; font-size:12px;"></div>
+                            </div>
+                        </div>
+
+                        <!-- XSS Lab -->
+                        <div class="card">
+                            <h3><i class="fa fa-code"></i> Lab 2: Reflected XSS</h3>
+                            <p style="font-size:13px; color:#aaa;">Execute a script alert pop-up.</p>
+                            <div class="challenge-box">
+                                <label>Target: Search Bar</label>
+                                <input id="xss-in" placeholder="Search...">
+                                <button class="btn" onclick="checkXSS()">Search</button>
+                                <div id="xss-res" style="margin-top:5px; font-size:12px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- === VIEW: ATTACK SIMULATION === -->
+        <div id="simulation" class="section-view">
+            <div class="card full-width">
+                <h3><i class="fa fa-virus"></i> Advanced Threat Simulator (MITRE v19)</h3>
+                <div style="display:flex; gap:10px; margin-bottom:15px;">
+                    <select id="sim-scenario" style="padding:10px; background:var(--bg-dark); color:white; border:1px solid var(--border); border-radius:5px; flex:1;">
+                        <option value="ransomware">Ransomware: Data Encrypted for Impact (T1486)</option>
+                        <option value="bruteforce">Credential Access: Brute Force (T1110)</option>
+                        <option value="phishing">Initial Access: Phishing (T1566)</option>
+                        <option value="ics">ICS: Firmware Modification (T0857)</option>
+                    </select>
+                    <button class="btn btn-red" onclick="runSimulation()">Run Attack</button>
+                </div>
+                <div class="terminal-window" id="sim-terminal">
+                    <div style="color:#aaa;">> System ready. Select a scenario to begin...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- === VIEW: INTEL & RESOURCES === -->
+        <div id="intel" class="section-view">
+            <div class="dashboard-grid">
+                <div class="card full-width">
+                    <h3>SIEM Comparison (2026 Analysis)</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Splunk + QRadar + Elastic</th>
+                                <th>Microsoft Sentinel</th>
+                                <th>Google Chronicle</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Analytics Speed</td>
+                                <td style="color:var(--success)">Real-time (Elastic)</td>
+                                <td>Near Real-time</td>
+                                <td>Fast (Search)</td>
+                            </tr>
+                            <tr>
+                                <td>MITRE Coverage</td>
+                                <td>98% (Native ICS)</td>
+                                <td>87%</td>
+                                <td>91%</td>
+                            </tr>
+                            <tr>
+                                <td>Deployment</td>
+                                <td>Hybrid / On-Prem</td>
+                                <td>Cloud Native</td>
+                                <td>Cloud Native</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="card">
+                    <h3><i class="fa fa-book"></i> Study Resources</h3>
+                    <ul style="list-style:none; line-height:2;">
+                        <li><a href="#" style="color:var(--primary)">OWASP Top 10 (2025 Update)</a></li>
+                        <li><a href="#" style="color:var(--primary)">NIST CSF 2.0 Guide</a></li>
+                        <li><a href="#" style="color:var(--primary)">SANS Purple Team Field Manual</a></li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3><i class="fa fa-flag"></i> Top CTF Platforms</h3>
+                    <ul style="list-style:none; line-height:2;">
+                        <li><i class="fa fa-cube"></i> HackTheBox</li>
+                        <li><i class="fa fa-brain"></i> TryHackMe</li>
+                        <li><i class="fa fa-trophy"></i> PicoCTF</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- === VIEW: AI TOOLS === -->
+        <div id="tools" class="section-view">
+            <div class="dashboard-grid">
+                <div class="card">
+                    <h3><i class="fa-brands fa-microsoft"></i> Security Copilot</h3>
+                    <p style="font-size:13px; color:#ccc; margin-top:5px;">Microsoft's GPT-4 powered SOC assistant. Automates incident response and reverses malware scripts.</p>
+                </div>
+                <div class="card">
+                    <h3><i class="fa-brands fa-google"></i> Google Sec-PaLM</h3>
+                    <p style="font-size:13px; color:#ccc; margin-top:5px;">Specialized LLM for threat intelligence and converting natural language to Chronicle queries.</p>
+                </div>
+                <div class="card">
+                    <h3><i class="fa-solid fa-crow"></i> Charlotte AI</h3>
+                    <p style="font-size:13px; color:#ccc; margin-top:5px;">CrowdStrike's generative AI for endpoint protection and threat hunting.</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<!-- COPILOT FLOATING BUTTON -->
+<div class="copilot-btn" onclick="toggleCopilot()">
+    <i class="fa fa-robot"></i>
+</div>
+
+<!-- COPILOT WINDOW -->
+<div class="copilot-window" id="copilot-win">
+    <div class="copilot-header">
+        <span>Grok Security Copilot</span>
+        <span onclick="toggleCopilot()" style="cursor:pointer">✕</span>
+    </div>
+    <div class="chat-area" id="chat-box">
+        <div class="msg bot">System Secure. I am analyzing live logs. How can I assist with threat hunting today?</div>
+    </div>
+    <div class="chat-input">
+        <input type="text" id="chat-input" placeholder="Ask about IP, hash, or CVE..." onkeypress="handleChat(event)">
+    </div>
+</div>
+
+<script>
+    // === NAVIGATION LOGIC ===
+    function switchTab(tabId, element) {
+        // Update Sidebar
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        element.classList.add('active');
+        
+        // Update Title
+        const titles = {
+            'dashboard': 'Security Operations Center',
+            'academy': 'Cyber Academy (THB)',
+            'simulation': 'Attack Simulator',
+            'intel': 'Threat Intelligence',
+            'tools': 'Next-Gen AI Tools'
+        };
+        document.getElementById('pageTitle').innerText = titles[tabId];
+
+        // Update View
+        document.querySelectorAll('.section-view').forEach(el => el.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+    }
+
+    // === CHART.JS INITIALIZATION ===
+    window.onload = function() {
+        // Doughnut Chart
+        const ctx1 = document.getElementById('threatDoughnut').getContext('2d');
+        new Chart(ctx1, {
+            type: 'doughnut',
+            data: {
+                labels: ['Critical', 'High', 'Medium', 'Low'],
+                datasets: [{
+                    data: [5, 12, 25, 58],
+                    backgroundColor: ['#ef4444', '#f97316', '#00eaff', '#10b981'],
+                    borderWidth: 0
+                }]
+            },
+            options: { plugins: { legend: { position: 'right', labels: { color: '#fff' } } } }
+        });
+
+        // Line Chart
+        const ctx2 = document.getElementById('trafficLine').getContext('2d');
+        new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'],
+                datasets: [{
+                    label: 'Inbound Traffic (GB)',
+                    data: [12, 19, 3, 5, 22, 30],
+                    borderColor: '#0062ff',
+                    backgroundColor: 'rgba(0, 98, 255, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: { scales: { y: { grid: { color: '#333' } }, x: { grid: { color: '#333' } } } }
+        });
+
+        startLiveLogs();
+        loadUser();
+    };
+
+    // === LIVE LOGS SIMULATION ===
+    function startLiveLogs() {
+        const container = document.getElementById('live-logs');
+        const events = [
+            "Allow: 192.168.1.45 -> 8.8.8.8 (DNS)",
+            "Block: 45.33.22.11 -> Port 22 (SSH Brute Force)",
+            "Notice: User 'Admin' logged in via MFA",
+            "Monitor: High CPU usage on Server-DB-01",
+            "Threat: Malware C2 Beacon detected on Endpoint-X"
+        ];
+        
+        setInterval(() => {
+            const log = document.createElement('div');
+            log.style.marginBottom = "4px";
+            log.style.borderBottom = "1px solid #222";
+            log.style.color = Math.random() > 0.8 ? "var(--danger)" : "var(--text-muted)";
+            log.innerHTML = `<span style="color:var(--primary)">[${new Date().toLocaleTimeString()}]</span> ${events[Math.floor(Math.random()*events.length)]}`;
+            container.prepend(log);
+            if(container.children.length > 8) container.removeChild(container.lastChild);
+        }, 2000);
+    }
+
+    // === ACADEMY / THB LOGIC ===
+    let currentUser = null;
+    let points = 0;
+
+    function loadUser() {
+        const stored = localStorage.getItem('thb_user');
+        if(stored) {
+            currentUser = stored;
+            points = parseInt(localStorage.getItem('thb_points') || '0');
+            showLearningPanel();
+        }
+    }
+
+    function thbLogin() {
+        const user = document.getElementById('thb-user').value;
+        if(user) {
+            currentUser = user;
+            localStorage.setItem('thb_user', user);
+            showLearningPanel();
+        }
+    }
+
+    function showLearningPanel() {
+        document.getElementById('login-panel').style.display = 'none';
+        document.getElementById('learning-panel').style.display = 'block';
+        updatePoints(0);
+    }
+
+    function updatePoints(add) {
+        points += add;
+        localStorage.setItem('thb_points', points);
+        document.getElementById('user-points').innerText = points;
+        document.getElementById('xp-bar').style.width = Math.min(points, 100) + "%";
+    }
+
+    function checkSQLi() {
+        const val = document.getElementById('sqli-in').value;
+        const res = document.getElementById('sqli-res');
+        if(val.includes("' OR '1'='1")) {
+            res.innerHTML = "<b style='color:var(--success)'>ACCESS GRANTED! Flag: {SQL_MASTER}</b>";
+            updatePoints(50);
+        } else {
+            res.innerHTML = "<span style='color:var(--danger)'>Login Failed</span>";
+        }
+    }
+
+    function checkXSS() {
+        const val = document.getElementById('xss-in').value;
+        const res = document.getElementById('xss-res');
+        if(val.includes("<script>")) {
+            res.innerHTML = "<b style='color:var(--success)'>PAYLOAD FIRED! Flag: {XSS_KING}</b>";
+            updatePoints(50);
+        } else {
+            res.innerHTML = "Result: " + val;
+        }
+    }
+
+    // === ATTACK SIMULATION LOGIC ===
+    const scenarios = {
+        ransomware: ["vssadmin delete shadows /all", "Encrypting C:\\Users\\Data...", "Ransom Note Dropped", "CRITICAL: T1486 Detected"],
+        bruteforce: ["SSH Login Failed (Root)", "SSH Login Failed (Root)", "SSH Login Failed (Root)", "Alert: Brute Force T1110"],
+        phishing: ["Email received: Invoice.pdf", "Outlook spawned PowerShell", "Connecting to evil.com", "Alert: Phishing T1566"]
+    };
+
+    function runSimulation() {
+        const term = document.getElementById('sim-terminal');
+        const sc = document.getElementById('sim-scenario').value;
+        const lines = scenarios[sc] || scenarios['ransomware'];
+        
+        term.innerHTML = "<div>> Initializing Attack Sequence...</div>";
+        
+        lines.forEach((line, i) => {
+            setTimeout(() => {
+                const div = document.createElement('div');
+                div.className = 'log-line';
+                div.style.color = i === lines.length - 1 ? 'var(--danger)' : '#0f0';
+                div.innerText = `[${new Date().toLocaleTimeString()}] ${line}`;
+                term.appendChild(div);
+                term.scrollTop = term.scrollHeight;
+            }, (i + 1) * 800);
+        });
+    }
+
+    // === AI COPILOT LOGIC ===
+    function toggleCopilot() {
+        const win = document.getElementById('copilot-win');
+        win.style.display = win.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    function handleChat(e) {
+        if(e.key === 'Enter') {
+            const input = document.getElementById('chat-input');
+            const box = document.getElementById('chat-box');
+            const val = input.value;
+            if(!val) return;
+
+            // User Msg
+            box.innerHTML += `<div class="msg user">${val}</div>`;
+            input.value = '';
+
+            // AI Response (Mock)
+            setTimeout(() => {
+                let reply = "I am processing that query against the threat database...";
+                if(val.toLowerCase().includes('sql')) reply = "Detected SQL Injection attempt. Recommended Action: Block IP at Firewall and check WAF logs.";
+                if(val.toLowerCase().includes('ip')) reply = "IP 10.45.22.1 is flagged as malicious in ThreatIntel (Confidence: 98%).";
+                
+                box.innerHTML += `<div class="msg bot"><b>Grok:</b> ${reply}</div>`;
+                box.scrollTop = box.scrollHeight;
+            }, 1000);
+        }
+    }
+</script>
+
++
+</body>
+</html>

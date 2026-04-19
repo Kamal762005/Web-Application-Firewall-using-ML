@@ -1,0 +1,15 @@
+Requirements:-
+1.Operating Systems:-
+	Windows 10/11(64-bit)
+	Ubuntu 20.04+
+	macOS
+2. Programming Language:- python 3.10 or latest version (recommended)
+3. Libraries:-
+	numpy 1.26.*
+	pandas latest version
+	scikit-learn 1.4.2
+4. Browser:- firefox (for realtime traffic interception), chrome + jupyter (for testing)
+5. Target Web Application:- http://demo.testfire.net
+6. Network Requirements:- 
+	proxy ports: 8080
+	Protocol: http (https not supported)
