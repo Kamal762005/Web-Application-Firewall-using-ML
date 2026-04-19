@@ -2,10 +2,10 @@
 A Web Application Firewall (WAF) is a security tool that monitors and filters HTTP traffic to protect web applications from common cyberattacks like SQL injection and XSS.
 
 ## 🎯 Objectives
-Build a lightweight and intelligent WAF
-Detect malicious HTTP requests using ML
-Improve accuracy over traditional rule-based systems
-Provide real-time request filtering
+- Build a lightweight and intelligent WAF
+* Detect malicious HTTP requests using ML
+* Improve accuracy over traditional rule-based systems
+* Provide real-time request filtering
 
 ## ⚙️ Tech Stack
 Python
